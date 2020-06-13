@@ -1,20 +1,43 @@
 pipeline {
          agent any
+	tools {
+		java : 'JDK 8' 
+	}
              stages {
-
                  stage('Source') {
                     steps {
-                       checkout([$class: 'GitSCM', branches: [[name: '*/master']], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[url:' ']]])
+                       checkout([$class: 'GitSCM', branches: [[name: '*/master']], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[url:' https://github.com/saimohith9/HappyTrip-JAVA.git']]])
 			              }        
                  }
-                  stage('Build') {
-                            steps { 
-                              script{
-                                bat label: '', script: 'npm install'
-                                bat label: '', script: 'npm run ng -- build --prod'
-                              }
-                            }
-                  }
+stage('build && SonarQube analysis') {
+            steps {
+                withSonarQubeEnv('My SonarQube Server') {
+                    // Optionally use a Maven environment you've configured already
+                    withMaven(maven:'Maven latest') {
+			sh 'mvn clean install'
+                        sh 'mvn clean package sonar:sonar'
+			sh 'echo "Successfully executed"'
+                    }
+                }
+            mail to: 'lsaimohith@gmail.com', from: 'lsaimohith@gmail.com',
+                subject: "Build: ${env.JOB_NAME} -Success", 
+                body: "Dear Team,\nThis is an automated mail to confirm that Release is successfully given for following  \"${env.JOB_NAME}\" build: ${env.BUILD_NUMBER}\n"
+            }
+        }
+stage("Quality Gate") {
+            steps {
+                timeout(time: 1, unit: 'HOURS') {
+                    // Parameter indicates whether to set pipeline to UNSTABLE if Quality Gate fails
+                    // true = set pipeline to UNSTABLE, false = don't
+                waitForQualityGate(webhookSecretId: 'yourSecretID')       
+		waitForQualityGate abortPipeline: false
+                }
+		
+            mail to: 'lsaimohith@gmail.com', from: 'lsaimohith@gmail.com',
+                subject: "Build: ${env.JOB_NAME} -Success", 
+                body: "Dear Team,\nThis is an automated mail to confirm that Release is successfully given for following  \"${env.JOB_NAME}\" build: ${env.BUILD_NUMBER}\n"
+            }
+        }
                stage('Archiving Artifacts') { 
                          steps{ 
                              archiveArtifacts 'dist/**' 
@@ -22,25 +45,20 @@ pipeline {
                  } 
                   stage('Deployment'){
 			             steps{
-                     script{
-                       dir("${path}\\Live")
-                       {
-                         fileOperations([fileCopyOperation(excludes: '', flattenFiles: false, includes: "dist\\**", targetLocation: "${path}\\Backup")])
-                       }
-                       fileOperations([fileCopyOperation(excludes: '', flattenFiles: false, includes: "dist/**", targetLocation: "${path}/Live")])
-                       dir("${path}/Config")
-                       {
-                       fileOperations([fileCopyOperation(excludes: '', flattenFiles: false, includes: "\\**", targetLocation: "${path}/Live/dist")])
-                       }
-                     }
+         				sh 'echo "Deploying....."'
 			             }
 		           }
            }
      post {
         success {
-            mail to: 'sarithareddy1919@gmail.com', from: 'sarithareddy1919@gmail.com',
+            mail to: 'lsaimohith@gmail.com', from: 'lsaimohith@gmail.com',
                 subject: "Build: ${env.JOB_NAME} -Success", 
                 body: "Dear Team,\nThis is an automated mail to confirm that Release is successfully given for following  \"${env.JOB_NAME}\" build: ${env.BUILD_NUMBER}\n"
         }
+failure {
+  mail to: 'lsaimohith@gmail.com', 
+	subject: 'The Pipeline failed :('
+           body: "Dear Team,\nThis is an automated mail to confirm that Release is failed given for following  \"${env.JOB_NAME}\" build: ${env.BUILD_NUMBER}\n"   	
+  }
     }
 }
