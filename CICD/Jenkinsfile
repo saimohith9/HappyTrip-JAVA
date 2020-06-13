@@ -12,9 +12,9 @@ stage('build') {
                         sh 'mvn clean package sonar:sonar'
 			sh 'echo "Successfully executed"'
 		    }
+		    notifyBuild('STARTED')
             }
-	notifyBuild('STARTED')
-        }
+	}
 stage('Sonar Qube Analysis') {
             steps {
                 timeout(time: 1, unit: 'HOURS') {
@@ -22,20 +22,20 @@ stage('Sonar Qube Analysis') {
                     // true = set pipeline to UNSTABLE, false = don't
                	waitForQualityGate abortPipeline: false
                 }
-		 }
-	notifyBuild('STARTED')
+		    notifyBuild('STARTED')
+	    }
         }
                stage('Archiving Artifacts') { 
                          steps{ 
                              archiveArtifacts 'dist/**' 
+				  notifyBuild('STARTED')
                          } 
-		       notifyBuild('STARTED')
-                 } 
+		                       } 
                   stage('Deployment'){
 			             steps{
          				sh 'echo "Deploying....."'
-			             }
-			  notifyBuild('STARTED')
+					      notifyBuild('STARTED')
+				     }
 		           }
            
      post {
