@@ -8,54 +8,72 @@ pipeline {
                //  }
 stage('build') {
             steps {
-                withSonarQubeEnv('My SonarQube Server') {
-                    // Optionally use a Maven environment you've configured already
-                    withMaven(maven:'Maven latest') {
-			bat 'mvn clean install'
-                        bat 'mvn clean package sonar:sonar'
-			bat 'echo "Successfully executed"'
-                    }
-                }
-       //     mail to: 'lsaimohith@gmail.com', from: 'lsaimohith@gmail.com',
-       //         subject: "Build: ${env.JOB_NAME} -Success", 
-       //         body: "Dear Team,\nThis is an automated mail to confirm that Release is successfully given for following"${env.JOB_NAME}" build: ${env.BUILD_NUMBER}\n"
+		    withSonarQubeEnv('My SonarQube Server'){
+                        sh 'mvn clean package sonar:sonar'
+			sh 'echo "Successfully executed"'
+		    }
             }
+	notifyBuild('STARTED')
         }
 stage('Sonar Qube Analysis') {
             steps {
                 timeout(time: 1, unit: 'HOURS') {
                     // Parameter indicates whether to set pipeline to UNSTABLE if Quality Gate fails
                     // true = set pipeline to UNSTABLE, false = don't
-                waitForQualityGate(webhookSecretId: 'yourSecretID')       
-		waitForQualityGate abortPipeline: false
+               	waitForQualityGate abortPipeline: false
                 }
-		
-      //      mail to: 'lsaimohith@gmail.com', from: 'lsaimohith@gmail.com',
-      //          subject: "Build: ${env.JOB_NAME} -Success", 
-       //         body: "Dear Team,\nThis is an automated mail to confirm that Release is successfully given for following "${env.JOB_NAME}" build: ${env.BUILD_NUMBER}\n"
-           }
+		 }
+	notifyBuild('STARTED')
         }
                stage('Archiving Artifacts') { 
                          steps{ 
                              archiveArtifacts 'dist/**' 
                          } 
+		       notifyBuild('STARTED')
                  } 
                   stage('Deployment'){
 			             steps{
          				sh 'echo "Deploying....."'
 			             }
+			  notifyBuild('STARTED')
 		           }
            
-   //  post {
-   //     success {
-    //        mail to: 'lsaimohith@gmail.com', from: 'lsaimohith@gmail.com',
-      //          subject: "Build: ${env.JOB_NAME} -Success", 
-         //       body: "Dear Team,\nThis is an automated mail to confirm that Release is successfully given for following"${env.JOB_NAME} "build: ${env.BUILD_NUMBER}\n"
-//        }
-//failure {
- // mail to: 'lsaimohith@gmail.com', 
-//	subject: 'The Pipeline failed :('
-  //         body: "Dear Team,\nThis is an automated mail to confirm that Release is failed given for following "${env.JOB_NAME} "build: ${env.BUILD_NUMBER}\n"   	
- // }
+     post {
+        success {
+		notifyBuild('SUCCESS')
+          }
+failure {
+	notifyBuild('FAILED')
+  }
     }
+}
+	def notifyBuild(String buildStatus = 'STARTED') {
+  // build status of null means successful
+  buildStatus = buildStatus ?: 'SUCCESS'
+
+  // Default values
+  def colorName = 'RED'
+  def colorCode = '#FF0000'
+  def subject = "${buildStatus}: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'"
+  def summary = "${subject} (${env.BUILD_URL})"
+  def details = """<p>STARTED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]':</p>
+    <p>Check console output at &QUOT;<a href='${env.BUILD_URL}'>${env.JOB_NAME} [${env.BUILD_NUMBER}]</a>&QUOT;</p>"""
+
+  // Override default values based on build status
+  if (buildStatus == 'STARTED') {
+    color = 'YELLOW'
+    colorCode = '#FFFF00'
+  } else if (buildStatus == 'SUCCESS') {
+    color = 'GREEN'
+    colorCode = '#00FF00'
+  } else {
+    color = 'RED'
+    colorCode = '#FF0000'
+  }
+	emailext (
+      subject: "STARTED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'",
+      body: """<p>STARTED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]':</p>
+        <p>Check console output at &QUOT;<a href='${env.BUILD_URL}'>${env.JOB_NAME} [${env.BUILD_NUMBER}]</a>&QUOT;</p>""",
+      recipientProviders: [[$class: 'DevelopersRecipientProvider']]
+    )
 }
