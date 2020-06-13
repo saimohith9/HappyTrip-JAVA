@@ -8,10 +8,17 @@ pipeline {
                //  }
 stage('build') {
             steps {
-		    withSonarQubeEnv('My SonarQube Server'){
-                        sh 'mvn clean package sonar:sonar'
+		    def rtMaven = Artifactory.newMavenBuild()
+rtMaven.tool = 'maven latest'
+
+// snip
+withSonarQubeEnv('My SonarQube Server') {
+  rtMaven.run pom: pomFile, goals: "clean install sonar:sonar -DskipTests", buildInfo: buildInfo
+}
+		   // withSonarQubeEnv('My SonarQube Server'){
+                    //    sh 'mvn clean package sonar:sonar'
 			sh 'echo "Successfully executed"'
-		    }
+		  //  }
 		    notifyBuild('STARTED')
             }
 	}
