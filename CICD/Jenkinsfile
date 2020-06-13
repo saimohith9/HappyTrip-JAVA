@@ -11,9 +11,9 @@ stage('build') {
                 withSonarQubeEnv('My SonarQube Server') {
                     // Optionally use a Maven environment you've configured already
                     withMaven(maven:'Maven latest') {
-			sh 'mvn clean install'
-                        sh 'mvn clean package sonar:sonar'
-			sh 'echo "Successfully executed"'
+			bat 'mvn clean install'
+                        bat 'mvn clean package sonar:sonar'
+			bat 'echo "Successfully executed"'
                     }
                 }
        //     mail to: 'lsaimohith@gmail.com', from: 'lsaimohith@gmail.com',
@@ -21,7 +21,7 @@ stage('build') {
        //         body: "Dear Team,\nThis is an automated mail to confirm that Release is successfully given for following"${env.JOB_NAME}" build: ${env.BUILD_NUMBER}\n"
             }
         }
-stage('Quality Gate') {
+stage('Sonar Qube Analysis') {
             steps {
                 timeout(time: 1, unit: 'HOURS') {
                     // Parameter indicates whether to set pipeline to UNSTABLE if Quality Gate fails
