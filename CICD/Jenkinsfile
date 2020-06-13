@@ -37,7 +37,7 @@ stage('Sonar Qube Analysis') {
 					      notifyBuild('STARTED')
 				     }
 		           }
-           
+	     }
      post {
         success {
 		notifyBuild('SUCCESS')
@@ -46,7 +46,6 @@ failure {
 	notifyBuild('FAILED')
   }
     }
-}
 }
 	def notifyBuild(String buildStatus = 'STARTED') {
   // build status of null means successful
