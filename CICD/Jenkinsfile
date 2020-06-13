@@ -45,7 +45,7 @@ stage("Quality Gate") {
          				sh 'echo "Deploying....."'
 			             }
 		           }
-           }
+           
    //  post {
    //     success {
     //        mail to: 'lsaimohith@gmail.com', from: 'lsaimohith@gmail.com',
