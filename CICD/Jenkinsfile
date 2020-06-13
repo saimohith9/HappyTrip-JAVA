@@ -18,7 +18,7 @@ stage('build && SonarQube analysis') {
                 }
             mail to: 'lsaimohith@gmail.com', from: 'lsaimohith@gmail.com',
                 subject: "Build: ${env.JOB_NAME} -Success", 
-                body: "Dear Team,\nThis is an automated mail to confirm that Release is successfully given for following  \"${env.JOB_NAME}\" build: ${env.BUILD_NUMBER}\n"
+                body: "Dear Team,\nThis is an automated mail to confirm that Release is successfully given for following"${env.JOB_NAME}" build: ${env.BUILD_NUMBER}\n"
             }
         }
 stage("Quality Gate") {
@@ -32,7 +32,7 @@ stage("Quality Gate") {
 		
             mail to: 'lsaimohith@gmail.com', from: 'lsaimohith@gmail.com',
                 subject: "Build: ${env.JOB_NAME} -Success", 
-                body: "Dear Team,\nThis is an automated mail to confirm that Release is successfully given for following  \"${env.JOB_NAME}\" build: ${env.BUILD_NUMBER}\n"
+                body: "Dear Team,\nThis is an automated mail to confirm that Release is successfully given for following "${env.JOB_NAME}" build: ${env.BUILD_NUMBER}\n"
             }
         }
                stage('Archiving Artifacts') { 
@@ -50,12 +50,12 @@ stage("Quality Gate") {
         success {
             mail to: 'lsaimohith@gmail.com', from: 'lsaimohith@gmail.com',
                 subject: "Build: ${env.JOB_NAME} -Success", 
-                body: "Dear Team,\nThis is an automated mail to confirm that Release is successfully given for following  \"${env.JOB_NAME}\" build: ${env.BUILD_NUMBER}\n"
+                body: "Dear Team,\nThis is an automated mail to confirm that Release is successfully given for following"${env.JOB_NAME} "build: ${env.BUILD_NUMBER}\n"
         }
 failure {
   mail to: 'lsaimohith@gmail.com', 
 	subject: 'The Pipeline failed :('
-           body: "Dear Team,\nThis is an automated mail to confirm that Release is failed given for following  \"${env.JOB_NAME}\" build: ${env.BUILD_NUMBER}\n"   	
+           body: "Dear Team,\nThis is an automated mail to confirm that Release is failed given for following "${env.JOB_NAME} "build: ${env.BUILD_NUMBER}\n"   	
   }
     }
 }
