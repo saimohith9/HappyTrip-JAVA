@@ -16,9 +16,9 @@ stage('build && SonarQube analysis') {
 			sh 'echo "Successfully executed"'
                     }
                 }
-            mail to: 'lsaimohith@gmail.com', from: 'lsaimohith@gmail.com',
-                subject: "Build: ${env.JOB_NAME} -Success", 
-                body: "Dear Team,\nThis is an automated mail to confirm that Release is successfully given for following"${env.JOB_NAME}" build: ${env.BUILD_NUMBER}\n"
+       //     mail to: 'lsaimohith@gmail.com', from: 'lsaimohith@gmail.com',
+       //         subject: "Build: ${env.JOB_NAME} -Success", 
+       //         body: "Dear Team,\nThis is an automated mail to confirm that Release is successfully given for following"${env.JOB_NAME}" build: ${env.BUILD_NUMBER}\n"
             }
         }
 stage("Quality Gate") {
@@ -30,10 +30,10 @@ stage("Quality Gate") {
 		waitForQualityGate abortPipeline: false
                 }
 		
-            mail to: 'lsaimohith@gmail.com', from: 'lsaimohith@gmail.com',
-                subject: "Build: ${env.JOB_NAME} -Success", 
-                body: "Dear Team,\nThis is an automated mail to confirm that Release is successfully given for following "${env.JOB_NAME}" build: ${env.BUILD_NUMBER}\n"
-            }
+      //      mail to: 'lsaimohith@gmail.com', from: 'lsaimohith@gmail.com',
+      //          subject: "Build: ${env.JOB_NAME} -Success", 
+       //         body: "Dear Team,\nThis is an automated mail to confirm that Release is successfully given for following "${env.JOB_NAME}" build: ${env.BUILD_NUMBER}\n"
+           }
         }
                stage('Archiving Artifacts') { 
                          steps{ 
@@ -46,16 +46,16 @@ stage("Quality Gate") {
 			             }
 		           }
            }
-     post {
-        success {
-            mail to: 'lsaimohith@gmail.com', from: 'lsaimohith@gmail.com',
-                subject: "Build: ${env.JOB_NAME} -Success", 
-                body: "Dear Team,\nThis is an automated mail to confirm that Release is successfully given for following"${env.JOB_NAME} "build: ${env.BUILD_NUMBER}\n"
-        }
-failure {
-  mail to: 'lsaimohith@gmail.com', 
-	subject: 'The Pipeline failed :('
-           body: "Dear Team,\nThis is an automated mail to confirm that Release is failed given for following "${env.JOB_NAME} "build: ${env.BUILD_NUMBER}\n"   	
-  }
+   //  post {
+   //     success {
+    //        mail to: 'lsaimohith@gmail.com', from: 'lsaimohith@gmail.com',
+      //          subject: "Build: ${env.JOB_NAME} -Success", 
+         //       body: "Dear Team,\nThis is an automated mail to confirm that Release is successfully given for following"${env.JOB_NAME} "build: ${env.BUILD_NUMBER}\n"
+//        }
+//failure {
+ // mail to: 'lsaimohith@gmail.com', 
+//	subject: 'The Pipeline failed :('
+  //         body: "Dear Team,\nThis is an automated mail to confirm that Release is failed given for following "${env.JOB_NAME} "build: ${env.BUILD_NUMBER}\n"   	
+ // }
     }
 }
