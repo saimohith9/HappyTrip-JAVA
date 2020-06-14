@@ -1,7 +1,5 @@
 pipeline {
          agent any
-	 environment {
-    PATH = "C:\\Program Files\\Git\\bin;${env.PATH}"
              stages {
                  stage('Source') {
                     steps {
@@ -57,7 +55,6 @@ failure {
 	notifyBuild('FAILED')
   }
     }
-}
 }
 	def notifyBuild(String buildStatus = 'STARTED') {
   // build status of null means successful
