@@ -6,11 +6,9 @@ pipeline {
  }
              stages {
 		     stage('build'){
-			      scannerHome = tool 'sonar_scanner'
             steps {
 		    withSonarQubeEnv('My SonarQube Server'){
 			   bat 'mvn -f happytrip-code/pom.xml clean install'
-bat '${scannerHome}/bin/sonar-scanner.bat'
 			    bat 'mvn -f happytrip-code/pom.xml clean package sonar:sonar'
 			    bat 'echo "successfully executed"'
                        // sh 'mvn clean package sonar:sonar'
