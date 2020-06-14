@@ -3,11 +3,12 @@ pipeline {
 	tools {
   maven 'maven latest'
 		jdk 'JDK 11'
+		hudson.plugins.sonar.SonarRunnerInstallation sonar_scanner
  }
              stages {
 stage('build') {
             steps {
-		    withSonarQubeEnv(credentialsId: 'dc4c73d3-2712-4f94-8aee-5269a894b83e',installationName: 'My SonarQube Server'){
+		    withSonarQubeEnv('My SonarQube Server'){
 			   bat 'mvn -f happytrip-code/pom.xml clean install'
 bat 'mvn -f happytrip-code/pom.xml clean package sonar:sonar'
 bat 'echo "successfully executed"'
@@ -20,7 +21,7 @@ bat 'echo "successfully executed"'
 	}
 stage('Sonar Qube Analysis') {
            steps {
-             timeout(time: 1, unit: 'HOURS') {
+             timeout(time: 10, unit: 'MINUTES') {
                     // Parameter indicates whether to set pipeline to UNSTABLE if Quality Gate fails
                     // true = set pipeline to UNSTABLE, false = don't
               	waitForQualityGate abortPipeline: true
