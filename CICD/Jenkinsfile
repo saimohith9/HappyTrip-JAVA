@@ -4,9 +4,9 @@ pipeline {
   maven 'maven latest'
 		jdk 'JDK 11'
  }
-	 def scannerHome = tool 'sonar_scanner'
              stages {
 		     stage('build'){
+			      scannerHome = tool 'sonar_scanner'
             steps {
 		    withSonarQubeEnv('My SonarQube Server'){
 			   bat 'mvn -f happytrip-code/pom.xml clean install'
