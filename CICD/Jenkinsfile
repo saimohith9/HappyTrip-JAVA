@@ -1,5 +1,10 @@
 pipeline {
          agent any
+	environment{
+	tool name: 'maven latest', type: 'maven'
+		tool name: 'sonar_scanner', type: 'hudson.plugins.sonar.SonarRunnerInstallation'
+		tool name: 'JDK 8', type: 'jdk'
+	}
              stages {
                  stage('Source') {
                     steps {
@@ -10,7 +15,7 @@ stage('build') {
             steps {
 		    withSonarQubeEnv('My SonarQube Server'){
 			   bat label: '', script: '''mvn clean install
-mvn clean sonar:sonar
+mvn clean package sonar:sonar
 echo "successfully executed"'''
                        // sh 'mvn clean package sonar:sonar'
 			// sh 'mvn org.sonarsource.scanner.maven:sonar-maven-plugin:3.6.0.1398:sonar'
