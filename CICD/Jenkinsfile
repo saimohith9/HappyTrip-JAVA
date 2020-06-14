@@ -1,10 +1,10 @@
 pipeline {
          agent any
-	environment{
-	tool name: 'maven latest', type: 'maven'
-		tool name: 'sonar_scanner', type: 'hudson.plugins.sonar.SonarRunnerInstallation'
-		tool name: 'JDK 8', type: 'jdk'
-	}
+	tools {
+  maven 'maven latest'
+		jdk 'JDK 8'
+		hudson.plugins.sonar.SonarRunnerInstallation 'sonar_scanner'
+ }
              stages {
                  stage('Source') {
                     steps {
