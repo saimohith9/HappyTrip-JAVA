@@ -9,9 +9,12 @@ pipeline {
 stage('build') {
             steps {
 		    withSonarQubeEnv('My SonarQube Server'){
-                        sh 'mvn clean package sonar:sonar'
+			   bat label: '', script: '''mvn clean install
+mvn clean sonar:sonar
+echo "successfully executed"'''
+                       // sh 'mvn clean package sonar:sonar'
 			// sh 'mvn org.sonarsource.scanner.maven:sonar-maven-plugin:3.6.0.1398:sonar'
-			    sh 'echo "Successfully executed"'
+			//    bat 'echo "Successfully executed"'
 		    }
 		    notifyBuild('STARTED')
             }
@@ -21,7 +24,7 @@ stage('Sonar Qube Analysis') {
                 timeout(time: 1, unit: 'HOURS') {
                     // Parameter indicates whether to set pipeline to UNSTABLE if Quality Gate fails
                     // true = set pipeline to UNSTABLE, false = don't
-               	waitForQualityGate abortPipeline: false
+               	waitForQualityGate abortPipeline: true
                 }
 		    notifyBuild('STARTED')
 	    }
