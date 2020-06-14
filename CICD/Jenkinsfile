@@ -3,18 +3,12 @@ pipeline {
 	tools {
   maven 'maven latest'
 		jdk 'JDK 8'
-		hudson.plugins.sonar.SonarRunnerInstallation 'sonar_scanner'
  }
              stages {
-                 stage('Source') {
-                    steps {
-                       checkout([$class: 'GitSCM', branches: [[name: '*/master']], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[url:' https://github.com/saimohith9/HappyTrip-JAVA.git']]])
-			              }        
-                 }
 stage('build') {
             steps {
 		    withSonarQubeEnv('My SonarQube Server'){
-			   bat label: '', script: '''mvn clean install
+			   bat label: '', script: '''mvn -f happytrip-code/pom.xml clean install
 mvn clean package sonar:sonar
 echo "successfully executed"'''
                        // sh 'mvn clean package sonar:sonar'
