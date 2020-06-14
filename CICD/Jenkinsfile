@@ -8,25 +8,34 @@ pipeline {
 		     stage('build & SonarQube Analysis'){
             steps {
 		    withSonarQubeEnv(credentialsId: 'sonar_api_key', installationName: 'My SonarQube Server') {
-			    bat 'mvn -f happytrip-code/pom.xml sonar:sonar'
+			    bat 'mvn -f happytrip-code/pom.xml clean package sonar:sonar'
 			    bat 'echo "successfully executed"'
                        // sh 'mvn clean package sonar:sonar'
 			// sh 'mvn org.sonarsource.scanner.maven:sonar-maven-plugin:3.6.0.1398:sonar'
 			//    bat 'echo "Successfully executed"'
 		    }
-		    script{
-			    def qg = waitForQualityGate()
-		     timeout(time: 10, unit: 'MINUTES') {
-			     if(qg.status != 'OK'){
-				     error "Pipeline aborted due to quality gate failures: ${qg.status}"
-				     notifyBuild('FAILED')
-			     }
-		     }
-		    }
+		   // script{
+		//	    def qg = waitForQualityGate()
+		//     timeout(time: 10, unit: 'MINUTES') {
+		//	     if(qg.status != 'OK'){
+		//		     error "Pipeline aborted due to quality gate failures: ${qg.status}"
+		//		     notifyBuild('FAILED')
+		//	     }
+		 //    }
+		 //   }
 		    bat 'mvn -f happytrip-code/pom.xml clean install'
 		    notifyBuild('STARTED')
             }
 	}
+		     stage('Quality Gate') {
+            steps {
+                timeout(time: 1, unit: 'HOURS') {
+                    // Parameter indicates whether to set pipeline to UNSTABLE if Quality Gate fails
+                    // true = set pipeline to UNSTABLE, false = don't
+                    waitForQualityGate abortPipeline: true
+                }
+            }
+        }
                stage('Archiving Artifacts') { 
                          steps{ 
                              archiveArtifacts 'dist/**' 
