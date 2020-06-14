@@ -3,7 +3,6 @@ pipeline {
 	tools {
   maven 'maven latest'
 		jdk 'JDK 11'
-		sonar 'sonar_scanner'
  }
              stages {
 		     stage('build'){
