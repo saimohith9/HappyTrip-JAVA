@@ -7,7 +7,7 @@ pipeline {
              stages {
 stage('build') {
             steps {
-		    withSonarQubeEnv('My SonarQube Server'){
+		    withSonarQubeEnv(credentialsId: 'dc4c73d3-2712-4f94-8aee-5269a894b83e',installationName: 'My SonarQube Server'){
 			   bat 'mvn -f happytrip-code/pom.xml clean install'
 bat 'mvn clean package sonar:sonar'
 bat 'echo "successfully executed"'
@@ -15,23 +15,19 @@ bat 'echo "successfully executed"'
 			// sh 'mvn org.sonarsource.scanner.maven:sonar-maven-plugin:3.6.0.1398:sonar'
 			//    bat 'echo "Successfully executed"'
 		    }
-		      def qualitygate = waitForQualityGate()
-      if (qualitygate.status != "OK") {
-         error "Pipeline aborted due to quality gate coverage failure: ${qualitygate.status}"
-      }
 		    notifyBuild('STARTED')
             }
 	}
-//stage('Sonar Qube Analysis') {
- //           steps {
-      //          timeout(time: 1, unit: 'HOURS') {
+stage('Sonar Qube Analysis') {
+           steps {
+             timeout(time: 1, unit: 'HOURS') {
                     // Parameter indicates whether to set pipeline to UNSTABLE if Quality Gate fails
                     // true = set pipeline to UNSTABLE, false = don't
- //              	waitForQualityGate abortPipeline: true
- //               }
-	//	    notifyBuild('STARTED')
-	//    }
-      //  }
+              	waitForQualityGate abortPipeline: true
+               }
+	    notifyBuild('STARTED')
+	    }
+        }
                stage('Archiving Artifacts') { 
                          steps{ 
                              archiveArtifacts 'dist/**' 
