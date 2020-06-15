@@ -1,17 +1,18 @@
 pipeline {
          agent any
 	tools {
-  maven 'maven latest'
+ 	 maven 'maven latest'
 		jdk 'JDK 11'
- }
+ 	}
 	environment {
     PATH = "C:\\WINDOWS\\SYSTEM32"
-}
+	}
 	//properties([parameters([booleanParam(defaultValue: false, description: 'If You Want Analysis Report', name: 'SonarQube')]), 
 	//	    [$class: 'JobLocalConfiguration', changeReasonComment: ''], pipelineTriggers([githubPush(), pollSCM('* * * * *')])])
              stages {
 		     stage('build & SonarQube Analysis'){
             steps {
+		       notifyBuild('STARTED')
 		  //  when {
   //anyOf {
 	//  expression { params.SonarQube == true }
@@ -23,11 +24,11 @@ pipeline {
 			    bat 'echo "successfully executed"'
 		    }
 		    bat 'mvn -f happytrip-code/pom.xml clean install'
-		    notifyBuild('STARTED')
             }
 	}
 		     stage('Quality Gate') {
             steps {
+		      notifyBuild('STARTED')
                 timeout(time: 10, unit: 'MINUTES') {
                     // Parameter indicates whether to set pipeline to UNSTABLE if Quality Gate fails
                     // true = set pipeline to UNSTABLE, false = don't
@@ -37,18 +38,18 @@ pipeline {
         }
                stage('Archiving Artifacts') { 
                          steps{ 
+				   notifyBuild('STARTED')
                              archiveArtifacts 'happytrip-code/target/**/*'
-				  notifyBuild('STARTED')
                          } 
 		                       } 
                   stage('Deployment'){
 			             steps{
+					     notifyBuild('STARTED')
 					     timeout(time: 5, unit: 'MINUTES') {
- input message: 'Do you want to deploy?', submitter: 'ops'
-}
-					     deploy adapters: [tomcat9(credentialsId: 'tomcat', path: '', url: 'http://localhost:9080/')], contextPath: 'happytrip', war: '**/*.war' 
-         				bat 'echo "Deploying....."'
-					      notifyBuild('STARTED')
+		 input message: 'Do you want to deploy?', submitter: 'ops'
+		}
+		 deploy adapters: [tomcat9(credentialsId: 'tomcat', path: '', url: 'http://localhost:9080/')], contextPath: 'happytrip', war: '**/*.war' 
+         		bat 'echo "Deploying....."'
 				     }
 		           }
 	     }
@@ -56,7 +57,7 @@ pipeline {
         success {
 		notifyBuild('SUCCESS')
           }
-failure {
+	failure {
 	notifyBuild('FAILED')
   }
     }
