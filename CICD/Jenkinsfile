@@ -7,6 +7,8 @@ pipeline {
              stages {
 		     stage('build & SonarQube Analysis'){
             steps {
+		    script{
+			    if(bat 'echo $SonarQube'){
 		    withSonarQubeEnv(credentialsId: 'sonar_api_key', installationName: 'My SonarQube Server') {
 			    bat 'mvn -f happytrip-code/pom.xml clean package sonar:sonar'
 			    bat 'echo "successfully executed"'
@@ -14,15 +16,8 @@ pipeline {
 			// sh 'mvn org.sonarsource.scanner.maven:sonar-maven-plugin:3.6.0.1398:sonar'
 			//    bat 'echo "Successfully executed"'
 		    }
-		   // script{
-		//	    def qg = waitForQualityGate()
-		//     timeout(time: 10, unit: 'MINUTES') {
-		//	     if(qg.status != 'OK'){
-		//		     error "Pipeline aborted due to quality gate failures: ${qg.status}"
-		//		     notifyBuild('FAILED')
-		//	     }
-		 //    }
-		 //   }
+			    }
+		    }
 		    bat 'mvn -f happytrip-code/pom.xml clean install'
 		    notifyBuild('STARTED')
             }
