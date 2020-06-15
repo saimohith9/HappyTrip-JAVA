@@ -9,16 +9,18 @@ pipeline {
              stages {
 		     stage('build & SonarQube Analysis'){
             steps {
-		    script{
-			    if(${params,SonarQube}){
+		    when {
+  anyOf {
+	  expression { params.SonarQube == true }
+  }
+  beforeInput true
+}
 		    withSonarQubeEnv(credentialsId: 'sonar_api_key', installationName: 'My SonarQube Server') {
 			    bat 'mvn -f happytrip-code/pom.xml clean package sonar:sonar'
 			    bat 'echo "successfully executed"'
                        // sh 'mvn clean package sonar:sonar'
 			// sh 'mvn org.sonarsource.scanner.maven:sonar-maven-plugin:3.6.0.1398:sonar'
 			//    bat 'echo "Successfully executed"'
-		    }else{
-		    	bat 'echo "You Skipped The Analysis Report"'
 		    }
 			    }
 			    }
@@ -43,7 +45,7 @@ pipeline {
 		                       } 
 		     stage('approval'){
 			     steps{
-timeout(time: 1, unit: 'HOURS') {
+timeout(time: 5, unit: 'MINUTES') {
  input message: 'Do you want to deploy?', submitter: 'ops'
 }
 		     }
