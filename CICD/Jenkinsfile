@@ -38,7 +38,7 @@ pipeline {
         }
                stage('Archiving Artifacts') { 
                          steps{ 
-                             archiveArtifacts 'happytrip-code/target'
+                             archiveArtifacts 'happytrip-code/target/**/*'
 				  notifyBuild('STARTED')
                          } 
 		                       } 
