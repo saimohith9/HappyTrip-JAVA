@@ -46,8 +46,8 @@ pipeline {
 					     timeout(time: 5, unit: 'MINUTES') {
  input message: 'Do you want to deploy?', submitter: 'ops'
 }
-					     deploy adapters: [tomcat9(credentialsId: '561d4fa6-b714-4cc4-9054-df5cd511c198', path: '', url: 'https://localhost:9080/')], contextPath: 'happytrip', war: '**/*.war'
-         				sh 'echo "Deploying....."'
+					     deploy adapters: [tomcat9(credentialsId: 'tomcat', path: '', url: 'http://localhost:9080/')], contextPath: 'happytrip', war: '**/*.war' 
+         				bat 'echo "Deploying....."'
 					      notifyBuild('STARTED')
 				     }
 		           }
