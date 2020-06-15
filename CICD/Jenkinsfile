@@ -8,7 +8,7 @@ pipeline {
 		     stage('build & SonarQube Analysis'){
             steps {
 		    script{
-			    if(bat 'echo $SonarQube'){
+			    if(bat 'echo ($SonarQube)'){
 		    withSonarQubeEnv(credentialsId: 'sonar_api_key', installationName: 'My SonarQube Server') {
 			    bat 'mvn -f happytrip-code/pom.xml clean package sonar:sonar'
 			    bat 'echo "successfully executed"'
