@@ -22,8 +22,6 @@ pipeline {
 			// sh 'mvn org.sonarsource.scanner.maven:sonar-maven-plugin:3.6.0.1398:sonar'
 			//    bat 'echo "Successfully executed"'
 		    }
-			    }
-			    }
 		    bat 'mvn -f happytrip-code/pom.xml clean install'
 		    notifyBuild('STARTED')
             }
