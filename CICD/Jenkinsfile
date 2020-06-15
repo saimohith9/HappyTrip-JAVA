@@ -9,12 +9,12 @@ pipeline {
              stages {
 		     stage('build & SonarQube Analysis'){
             steps {
-		    when {
-  anyOf {
-	  expression { params.SonarQube == true }
-  }
-  beforeInput true
-}
+		  //  when {
+  //anyOf {
+	//  expression { params.SonarQube == true }
+//  }
+ // beforeInput true
+//}
 		    withSonarQubeEnv(credentialsId: 'sonar_api_key', installationName: 'My SonarQube Server') {
 			    bat 'mvn -f happytrip-code/pom.xml clean package sonar:sonar'
 			    bat 'echo "successfully executed"'
