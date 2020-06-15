@@ -21,9 +21,6 @@ pipeline {
 		    withSonarQubeEnv(credentialsId: 'sonar_api_key', installationName: 'My SonarQube Server') {
 			    bat 'mvn -f happytrip-code/pom.xml clean package sonar:sonar'
 			    bat 'echo "successfully executed"'
-                       // sh 'mvn clean package sonar:sonar'
-			// sh 'mvn org.sonarsource.scanner.maven:sonar-maven-plugin:3.6.0.1398:sonar'
-			//    bat 'echo "Successfully executed"'
 		    }
 		    bat 'mvn -f happytrip-code/pom.xml clean install'
 		    notifyBuild('STARTED')
@@ -44,16 +41,12 @@ pipeline {
 				  notifyBuild('STARTED')
                          } 
 		                       } 
-		     stage('approval'){
-			     steps{
-timeout(time: 5, unit: 'MINUTES') {
- input message: 'Do you want to deploy?', submitter: 'ops'
-}
-		     }
-		     }
                   stage('Deployment'){
 			             steps{
-					     deploy adapters: [tomcat9(credentialsId: '561d4fa6-b714-4cc4-9054-df5cd511c198', path: '', url: 'https://localhost:9080')], contextPath: 'happytrip', war: '**/*.war'
+					     timeout(time: 5, unit: 'MINUTES') {
+ input message: 'Do you want to deploy?', submitter: 'ops'
+}
+					     deploy adapters: [tomcat9(credentialsId: '561d4fa6-b714-4cc4-9054-df5cd511c198', path: '', url: 'https://localhost:9080/')], contextPath: 'happytrip', war: '**/*.war'
          				sh 'echo "Deploying....."'
 					      notifyBuild('STARTED')
 				     }
