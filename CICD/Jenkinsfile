@@ -80,8 +80,8 @@ pipeline {
 		 // Default values
 		  def colorName = 'red' 
  		 def colorCode = '#FF0000'
-		def summary = "<style>body{color:${colorName};}</style><body><p>${buildStatus}: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'</p>"
-		def details = """<p>${buildStatus}: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]':</p>
+		def summary = "<p>${buildStatus}: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'</p>"
+		def details = """<style>body{color:${colorName};}</style><body><p>${buildStatus}: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]':</p>
     <p>Check console output at ;<a href="${env.BUILD_URL}"></a>${env.JOB_NAME} [${env.BUILD_NUMBER}];</p></body>"""
 	//emailext body: """<p>STARTED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]':</p>
      //  <p>Check console output at &QUOT;<a href='${env.BUILD_URL}'>${env.JOB_NAME} [${env.BUILD_NUMBER}]</a>&QUOT;</p>""",subject: "STARTED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'",to:'lsaimohith@gmail.com'
