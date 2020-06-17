@@ -66,25 +66,23 @@ pipeline {
   // build status of null means successful
   buildStatus = buildStatus ?: 'SUCCESS'
 
-  // Default values
-  def colorName = 'Red' 
-  def colorCode = '#FF0000'
-		def subject = "${buildStatus}: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'"
-  def summary = "<p style="background-color:${colorName}">${subject}</p>"
-		def details = """<p>${buildStatus}: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]':</p>
-    <p>Check console output at ;<a href="${env.BUILD_URL}"></a>${env.JOB_NAME} [${env.BUILD_NUMBER}];</p>"""
-
   // Override default values based on build status
   if (buildStatus == 'STARTED') {
-    colorName = 'Yellow'
+    colorName = 'yellow'
     colorCode = '#FFFF00'
   } else if (buildStatus == 'SUCCESS') {
-    colorName = 'Green'
+    colorName = 'green'
     colorCode = '#00FF00'
   } else {
-    colorName = 'Red'
+    colorName = 'red'
     colorCode = '#FF0000'
   }
+		 // Default values
+		  def colorName = 'red' 
+ 		 def colorCode = '#FF0000'
+		def summary = "<p style = "background-color: ${colorName};">${buildStatus}: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'</p>"
+		def details = """<p>${buildStatus}: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]':</p>
+    <p>Check console output at ;<a href="${env.BUILD_URL}"></a>${env.JOB_NAME} [${env.BUILD_NUMBER}];</p>"""
 	//emailext body: """<p>STARTED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]':</p>
      //  <p>Check console output at &QUOT;<a href='${env.BUILD_URL}'>${env.JOB_NAME} [${env.BUILD_NUMBER}]</a>&QUOT;</p>""",subject: "STARTED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'",to:'lsaimohith@gmail.com'
    //   recipientProviders: [[$class: '$DEFAULT_REPLYTO']
