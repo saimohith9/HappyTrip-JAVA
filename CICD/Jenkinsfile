@@ -70,7 +70,7 @@ pipeline {
   def colorName = 'Red'
   def colorCode = '#FF0000'
 		def subject = "${buildStatus}: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'"
-  def summary = "<p style="background-color:${colorName};">${subject}</p>"
+  def summary = "<p style="background-color: ${colorName};">${subject}</p>"
 		def details = """<p>${buildStatus}: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]':</p>
     <p>Check console output at ;<a href="${env.BUILD_URL}"></a>${env.JOB_NAME} [${env.BUILD_NUMBER}];</p>"""
 
