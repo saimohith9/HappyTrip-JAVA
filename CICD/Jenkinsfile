@@ -65,26 +65,10 @@ pipeline {
 	def notifyBuild(String buildStatus = 'STARTED') {
   // build status of null means successful
   buildStatus = buildStatus ?: 'SUCCESS'
-
-  // Override default values based on build status
-  if (buildStatus == 'STARTED') {
-    colorName = 'yellow'
-    colorCode = '#FFFF00'
-  } else if (buildStatus == 'SUCCESS') {
-    colorName = 'green'
-    colorCode = '#00FF00'
-  } else {
-    colorName = 'red'
-    colorCode = '#FF0000'
-  }
-		 // Default values
-		  def colorName = 'red' 
- 		 def colorCode = '#FF0000'
+		
 		def summary = "${buildStatus}: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'"
-		def details = """<style>p{color:${colorName};}</style><p>${buildStatus}: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]':</p>
+		def details = """<p><b>${buildStatus}</b> : Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]':</p>
     <p>Check console output at ${env.BUILD_URL}; ${env.JOB_NAME} [${env.BUILD_NUMBER}];</p>"""
-	//emailext body: """<p>STARTED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]':</p>
-     //  <p>Check console output at &QUOT;<a href='${env.BUILD_URL}'>${env.JOB_NAME} [${env.BUILD_NUMBER}]</a>&QUOT;</p>""",subject: "STARTED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'",to:'lsaimohith@gmail.com'
-   //   recipientProviders: [[$class: '$DEFAULT_REPLYTO']
+		
 		emailext body: details,subject: summary,to:'saimohith49@gmail.com' 
 }
