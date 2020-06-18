@@ -63,11 +63,13 @@ pipeline {
     }
 }
 	def notifyBuild(String buildStatus = 'STARTED') {
+		def currentStage = getCurrentStageName()
   // build status of null means successful
   buildStatus = buildStatus ?: 'SUCCESS'
 		
 		def summary = "${buildStatus}: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'"
 		def details = """<p><b>${buildStatus}</b> : Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]':</p>
+		<p>your job is at this stage: ${currentStage}</p>
     <p>Check console output at ${env.BUILD_URL}; ${env.JOB_NAME} [${env.BUILD_NUMBER}];</p>"""
 		
 		emailext body: details,subject: summary,to:'saimohith49@gmail.com' 
