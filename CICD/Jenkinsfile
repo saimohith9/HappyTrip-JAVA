@@ -69,7 +69,7 @@ pipeline {
     }
 }
 	def notifyBuild(String buildStatus = 'STARTED') {
-		String stageName = null;
+		String stageName
   // build status of null means successful
   buildStatus = buildStatus ?: 'SUCCESS'
 		
