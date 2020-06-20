@@ -9,6 +9,7 @@ pipeline {
 	}
 	parameters{
 		booleanParam(defaultValue: false, description: 'If You Want Analysis Report', name: 'SonarQube')
+		booleanParam(defaultValue: false, description: 'If You Want to Deploy', name: 'Deployment')
 	}
 		 //   [$class: 'JobLocalConfiguration', changeReasonComment: ''], pipelineTriggers([githubPush(), pollSCM('* * * * *')])])
              stages {
@@ -43,8 +44,10 @@ pipeline {
                          } 
 		                       } 
                   stage('Deployment'){
+			  script{
+			  if(params.Deployment == true){
 			             steps{
-					       script {stageName = env.STAGE_NAME}
+					     stageName = env.STAGE_NAME
 					     notifyBuild('STARTED')
 					     timeout(time: 5, unit: 'MINUTES') {
 		 input message: 'Do you want to deploy?', submitter: 'ops'
@@ -53,6 +56,8 @@ pipeline {
          		bat 'echo "Deploying....."'
 				     }
 		           }
+		  }
+	     }
 	     }
      post {
         success {
