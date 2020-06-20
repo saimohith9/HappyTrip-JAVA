@@ -22,12 +22,12 @@ pipeline {
 			    bat 'mvn -f happytrip-code/pom.xml clean package sonar:sonar'
 			    bat 'echo "successfully executed"'
 		    } 
+				     bat 'mvn -f happytrip-code/pom.xml clean install'
                 timeout(time: 10, unit: 'MINUTES') {
                     // Parameter indicates whether to set pipeline to UNSTABLE if Quality Gate fails
                     // true = set pipeline to UNSTABLE, false = don't
                     waitForQualityGate abortPipeline: true
 		}
-		    bat 'mvn -f happytrip-code/pom.xml clean install'
 			    }
 			    else{
 				   bat 'mvn -f happytrip-code/pom.xml clean install'
