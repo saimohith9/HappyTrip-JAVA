@@ -23,7 +23,7 @@ pipeline {
 //}
             steps {
 		    script{
-			    if(${params.SonarQube}){
+			    if(params.SonarQube == true){
 		       notifyBuild('STARTED')
 		    withSonarQubeEnv(credentialsId: 'sonar_api_key', installationName: 'My SonarQube Server') {
 			    bat 'mvn -f happytrip-code/pom.xml clean package sonar:sonar'
