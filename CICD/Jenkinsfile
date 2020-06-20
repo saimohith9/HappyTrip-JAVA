@@ -13,24 +13,30 @@ pipeline {
 		 //   [$class: 'JobLocalConfiguration', changeReasonComment: ''], pipelineTriggers([githubPush(), pollSCM('* * * * *')])])
              stages {
 		     stage('build & SonarQube Analysis'){
-			      script{
-			    stageName = env.STAGE_NAME
-		    when {
-  anyOf {
-	  expression { ${params.SonarQube} == true }
-  }
-  beforeInput true
-}
+			    //  script{
+			//    stageName = env.STAGE_NAME
+		 //   when {
+  //anyOf {
+	//  expression { ${params.SonarQube} == true }
+//  }
+//  beforeInput true
+//}
             steps {
+		    script{
+			    if(${params.SonarQube}){
 		       notifyBuild('STARTED')
-		    }
 		    withSonarQubeEnv(credentialsId: 'sonar_api_key', installationName: 'My SonarQube Server') {
 			    bat 'mvn -f happytrip-code/pom.xml clean package sonar:sonar'
 			    bat 'echo "successfully executed"'
 		    }
 		    bat 'mvn -f happytrip-code/pom.xml clean install'
-            }
+			    }
+			    else{
+				   bat 'mvn -f happytrip-code/pom.xml clean install'
+			    }
+		    }
 	}
+		     }
 		     stage('Quality Gate') {
             steps {
 		    script {stageName = env.STAGE_NAME}
