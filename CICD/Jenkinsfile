@@ -21,17 +21,12 @@ pipeline {
 		    withSonarQubeEnv(credentialsId: 'sonar_api_key', installationName: 'My SonarQube Server') {
 			    bat 'mvn -f happytrip-code/pom.xml clean package sonar:sonar'
 			    bat 'echo "successfully executed"'
-		    } stage('Quality Gate') {
-            steps {
-		    script {stageName = env.STAGE_NAME}
-		      notifyBuild('STARTED')
+		    } 
                 timeout(time: 10, unit: 'MINUTES') {
                     // Parameter indicates whether to set pipeline to UNSTABLE if Quality Gate fails
                     // true = set pipeline to UNSTABLE, false = don't
                     waitForQualityGate abortPipeline: true
-                }
-            }
-        }
+		}
 		    bat 'mvn -f happytrip-code/pom.xml clean install'
 			    }
 			    else{
