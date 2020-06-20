@@ -44,10 +44,10 @@ pipeline {
                          } 
 		                       } 
                   stage('Deployment'){
-			  script{
-			  if(params.Deployment == true){
 			             steps{
-					     stageName = env.STAGE_NAME
+					      script{
+						       stageName = env.STAGE_NAME
+			  if(params.Deployment == true){
 					     notifyBuild('STARTED')
 					     timeout(time: 5, unit: 'MINUTES') {
 		 input message: 'Do you want to deploy?', submitter: 'ops'
